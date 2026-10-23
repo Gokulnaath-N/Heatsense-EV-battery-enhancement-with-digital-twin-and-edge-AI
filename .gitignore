@@ -1,0 +1,90 @@
+# Git ignore rules for HeatSense repository
+# Enforce G6: Reproducibility and hygiene
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing and Type Checking
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Node / Dashboard
+node_modules/
+.npm/
+.vite/
+*.log
+
+# PlatformIO / Embedded
+.pio/
+.pioenvs/
+.piolibdeps/
+.clangd/
+.vscode/ipch/
+
+# Databases and Local State
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment and Secrets
+*.env
+.env.*
+!.env.example
+
+# IDE and OS Junk
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Experiment Runs and Notebook Checkpoints
+runs/*
+!runs/README.md
+.ipynb_checkpoints/
+
+# Data Directories (keep structure via .gitkeep and README.md, ignore all raw/session data)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/sessions/*
+!data/sessions/.gitkeep
+data/external/*
+!data/external/.gitkeep
