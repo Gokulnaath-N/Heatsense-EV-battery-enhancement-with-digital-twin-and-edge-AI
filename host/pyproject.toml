@@ -1,0 +1,120 @@
+[project]
+name = "heatsense"
+version = "0.1.0.dev0"
+description = "A physics-informed, offline-first battery digital twin: ESP32 firmware that owns safety, a Python host that estimates battery state, and a web dashboard that explains it."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.0,<3",
+    "scipy>=1.13,<2",
+    "pydantic>=2.7,<3",
+    "pydantic-settings>=2.3,<3",
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+    "pyserial>=3.5,<4",
+    "structlog>=24.1,<27",
+    "PyYAML>=6.0,<7",
+]
+# License is omitted deliberately: the project owner has not yet selected a license.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/heatsense"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8,<10",
+    "pytest-asyncio>=0.23,<2",
+    "pytest-cov>=5,<8",
+    "pytest-timeout>=2.3,<4",
+    "hypothesis>=6.100,<7",
+    "httpx>=0.27,<1",
+    "ruff>=0.5,<1",
+    "mypy>=1.10,<3",
+    "types-pyserial",
+    "types-PyYAML",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+# [project.scripts]
+# Console scripts are omitted deliberately: will be introduced in the CLI prompt (Prompt 09).
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "B", "UP", "SIM", "C4", "PL", "RUF", "N", "ANN", "S", "T20", "PT", "ASYNC", "TRY", "PERF"
+]
+ignore = [
+    # E501: Line length limit.
+    # Justification: Formatting is governed by ruff format; Prompt 01 package docstrings must remain unmodified.
+    "E501",
+    # PLR0913: Too many arguments in function definition.
+    # Justification: Hexagonal architecture constructors inject multiple domain ports and adapters.
+    "PLR0913",
+    # ANN401: Dynamically typed expressions (typing.Any).
+    # Justification: Boundary adapters and serialization decoders occasionally handle arbitrary JSON/wire payloads.
+    "ANN401",
+    # TRY003: Avoid specifying long messages outside the exception class.
+    # Justification: Precise diagnostic messages with contextual runtime variables are required in typed errors.
+    "TRY003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# S101: allow assert in test suites
+# PLR2004: allow magic numbers in test assertions
+# ANN201: allow missing return type annotations on test functions
+"tests/**" = ["S101", "PLR2004", "ANN201"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src", "tests"]
+explicit_package_bases = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+timeout = 30
+addopts = "-ra -q --strict-markers --strict-config"
+filterwarnings = ["error"]
+markers = [
+    "unit: fast, isolated unit tests with no I/O",
+    "contract: port contract verification tests shared across implementations",
+    "integration: tests verifying cross-layer adapter interactions",
+    "e2e: end-to-end pipeline execution tests against simulated device",
+    "property: property-based and fuzz testing using Hypothesis",
+    "slow: tests taking longer than 5 seconds to complete",
+]
+
+[tool.coverage.run]
+source = ["heatsense"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "\\.\\.\\.",
+]
+# Coverage thresholds are deliberately enforced externally by scripts/check_coverage.py
+# rather than in pyproject.toml, so that plain development runs remain flexible while quality gates stay strict.
