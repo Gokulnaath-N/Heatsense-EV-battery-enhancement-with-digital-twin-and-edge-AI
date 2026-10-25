@@ -164,7 +164,10 @@ def check_package_docstrings(root: Path) -> list[str]:
     if not pkg_root.is_dir():
         return [f"Package root directory does not exist: {pkg_root}"]
 
-    for current_dir, _, files in os.walk(pkg_root):
+    for current_dir, dirs, files in os.walk(pkg_root):
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        if os.path.basename(current_dir) == "__pycache__":
+            continue
         rel_dir = Path(current_dir).relative_to(root).as_posix()
         if "__init__.py" not in files:
             errors.append(f"Python package directory missing __init__.py: {rel_dir}")
