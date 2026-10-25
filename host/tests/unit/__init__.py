@@ -1,2 +1,1 @@
-"""HeatSense unit test suite.
-"""
+"""HeatSense unit test suite."""

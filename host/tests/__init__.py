@@ -1,2 +1,1 @@
-"""HeatSense host test suite root package.
-"""
+"""HeatSense host test suite root package."""

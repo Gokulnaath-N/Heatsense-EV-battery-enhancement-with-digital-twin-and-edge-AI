@@ -1,2 +1,1 @@
-"""HeatSense domain layer unit tests.
-"""
+"""HeatSense domain layer unit tests."""

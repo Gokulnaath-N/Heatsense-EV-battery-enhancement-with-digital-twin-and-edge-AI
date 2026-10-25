@@ -1,2 +1,1 @@
-"""HeatSense infrastructure layer unit tests.
-"""
+"""HeatSense infrastructure layer unit tests."""

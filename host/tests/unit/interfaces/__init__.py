@@ -1,2 +1,1 @@
-"""HeatSense interfaces layer unit tests.
-"""
+"""HeatSense interfaces layer unit tests."""
