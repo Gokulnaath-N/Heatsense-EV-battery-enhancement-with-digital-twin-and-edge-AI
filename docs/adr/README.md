@@ -21,6 +21,7 @@ ADR template and decision records:
 | Number | Title | Status | Date |
 | :--- | :--- | :--- | :--- |
 | [0001](0001-repository-layout.md) | Monorepo layout with sibling safety boundaries and hexagonal host | ACCEPTED | 2026-10-24 |
+| [0002](0002-tooling-and-dependency-policy.md) | Modern Python toolchain using uv, standard pyproject packaging, strict linting/typing, and automated quality gates | ACCEPTED | 2026-10-24 |
 
 ## Rules
 - MAY: Propose architectural revisions, new port definitions, or communication protocol changes.
