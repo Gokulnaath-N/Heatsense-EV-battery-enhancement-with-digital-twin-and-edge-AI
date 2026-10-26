@@ -199,7 +199,7 @@ The transformation of wire units to domain SI units occurs at exactly **ONE** lo
 
 ## FaultMask Bit Allocation
 
-The `FaultMask` encodes discrete hardware safety trip conditions and sensor fault diagnostics. The exact bit positions below are **PROVISIONAL**; the canonical authority for serialization byte layouts is Prompt 04.
+The `FaultMask` encodes discrete hardware safety trip conditions and sensor fault diagnostics. The authoritative byte layout and bit assignments were formally established in `docs/protocol/telemetry-v1.md` (Prompt 04).
 
 | Bit Position | Mnemonic | Semantic Meaning | Hardware Source | Safety Trip Triggered? |
 | :--- | :--- | :--- | :--- | :--- |
