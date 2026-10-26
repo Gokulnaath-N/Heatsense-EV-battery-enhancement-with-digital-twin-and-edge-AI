@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HeatSenseGoldenVector",
+  "type": "object",
+  "required": ["id", "description", "raw_hex", "raw_repr", "should_parse"],
+  "properties": {
+    "id": { "type": "string" },
+    "description": { "type": "string" },
+    "raw_hex": { "type": "string" },
+    "raw_repr": { "type": "string" },
+    "should_parse": { "type": "boolean" },
+    "expected_type": { "type": ["string", "null"] },
+    "expected_fields": { "type": ["object", "null"] },
+    "expected_error": { "type": ["string", "null"] }
+  }
+}
