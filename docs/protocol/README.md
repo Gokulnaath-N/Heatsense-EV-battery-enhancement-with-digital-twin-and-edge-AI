@@ -1,27 +1,26 @@
 # protocol
 
 ## Purpose
-Documents the binary serial telemetry protocol and framing specification connecting the ESP32 firmware and the Python host.
+Documents the serial wire telemetry protocol, frame grammar, and interface contract connecting the ESP32 firmware and the Python host.
 
 ## Goal served
-G2 (Make the Safety Boundary Visible) and G3 (Contract First). Defines byte layouts, CRC-16-CCITT polynomials, framing delimiters, and unit conversions in one authoritative location.
+G1 (Unambiguous Interfaces) and G2 (Make the Safety Boundary Visible). Defines byte layouts, CRC-16-CCITT algorithms, framing delimiters, and command semantics in one authoritative specification.
 
 ## Contains
-Planned protocol specifications and framing guides:
-- Framing format: magic sync bytes, payload length, sequence counter, payload, and CRC-16.
-- Packet types: periodic telemetry frame, device status frame, host command frames (ARM, DISARM, PING).
-- Wire unit specifications: millivolts (`v_mv`), milliamps (`i_ma`), deci-Celsius (`t_dc`).
+- [telemetry-v1.md](telemetry-v1.md): The byte-exact specification of HeatSense Telemetry Protocol v1.
 
 ## Rules
-- MAY: Specify byte offsets, struct packing, endianness (little-endian), and error detection polynomials.
+- MAY: Specify byte offsets, framing grammars, integer ranges, and error detection polynomials.
 - MUST NOT: Allow divergent protocol definitions between firmware and host; all golden vectors must validate across both decoders.
 
 ## Status
-Planned in Prompt 04.
+Draft for review.
 
 ## Owner
-Software
+Systems & Protocol Engineer
 
 ## Related documents
-- [contracts/README.md](../../contracts/README.md)
+- [contracts/golden/README.md](../../contracts/golden/README.md)
 - [docs/glossary.md](../glossary.md)
+- [docs/adr/0003-telemetry-transport-ascii-crc16.md](../adr/0003-telemetry-transport-ascii-crc16.md)
+- [docs/adr/0004-host-device-command-subset.md](../adr/0004-host-device-command-subset.md)
