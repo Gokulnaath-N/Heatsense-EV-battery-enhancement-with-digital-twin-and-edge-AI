@@ -8,10 +8,11 @@ G1 (Enforce Architecture by Structure), G3 (Architecture Enforced by Machine), G
 
 ## Contains
 Automation and quality gate scripts:
-- `check.ps1`: The primary PowerShell one-command quality gate for Windows. Runs all 9 checks, fails fast, and reports final status.
+- `check.ps1`: The primary PowerShell one-command quality gate for Windows. Runs all 10 checks, fails fast, and reports final status.
 - `check.sh`: The POSIX bash counterpart for Linux/macOS/WSL (`set -euo pipefail`).
 - `verify_structure.py`: Zero-dependency Python guard checking directory completeness, directory markers, docstring requirements, and claims policy phrasing.
 - `arch_guard.py`: AST-based architecture checker enforcing hexagonal layer rules (R1–R9) and preventing unauthorized cross-layer or firmware imports.
+- `check_docs.py`: Validates architecture document standards, relative links, Mermaid diagram syntax, ADR formatting, quality attribute honesty, and open question integrity.
 - `check_dependencies_doc.py`: Verifies that `docs/DEPENDENCIES.md` remains strictly synchronized with `host/pyproject.toml` and `host/uv.lock`.
 - `check_coverage.py`: Enforces test coverage thresholds (80% overall, 90% for domain) from `host/coverage.json`.
 

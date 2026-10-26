@@ -16,7 +16,7 @@ run_step() {
     local step_num="$1"
     local name="$2"
     shift 2
-    echo "[Step $step_num/9] $name..."
+    echo "[Step $step_num/10] $name..."
     if "$@"; then
         echo "  -> PASS"
     else
@@ -32,27 +32,30 @@ run_step 1 "Verify Repository Structure" python3 "$REPO_ROOT/scripts/verify_stru
 # Step 2: arch_guard.py
 run_step 2 "Architecture Guard" python3 "$REPO_ROOT/scripts/arch_guard.py" --root "$REPO_ROOT/host/src/heatsense"
 
-# Step 3: uv lock --check
-(cd "$HOST_DIR" && run_step 3 "Verify Lockfile Consistency" uv lock --check)
+# Step 3: check_docs.py
+run_step 3 "Check Documentation Integrity" python3 "$REPO_ROOT/scripts/check_docs.py" --root "$REPO_ROOT"
 
-# Step 4: check_dependencies_doc.py
-run_step 4 "Check Dependency Documentation" python3 "$REPO_ROOT/scripts/check_dependencies_doc.py"
+# Step 4: uv lock --check
+(cd "$HOST_DIR" && run_step 4 "Verify Lockfile Consistency" uv lock --check)
 
-# Step 5: ruff check
-(cd "$HOST_DIR" && run_step 5 "Ruff Lint" uv run ruff check)
+# Step 5: check_dependencies_doc.py
+run_step 5 "Check Dependency Documentation" python3 "$REPO_ROOT/scripts/check_dependencies_doc.py"
 
-# Step 6: ruff format --check
-(cd "$HOST_DIR" && run_step 6 "Ruff Format Check" uv run ruff format --check)
+# Step 6: ruff check
+(cd "$HOST_DIR" && run_step 6 "Ruff Lint" uv run ruff check)
 
-# Step 7: mypy
-(cd "$HOST_DIR" && run_step 7 "Mypy Strict Type Check" uv run mypy)
+# Step 7: ruff format --check
+(cd "$HOST_DIR" && run_step 7 "Ruff Format Check" uv run ruff format --check)
 
-# Step 8: pytest with coverage
-(cd "$HOST_DIR" && HYPOTHESIS_PROFILE=ci run_step 8 "Pytest with Coverage" uv run coverage run -m pytest)
+# Step 8: mypy
+(cd "$HOST_DIR" && run_step 8 "Mypy Strict Type Check" uv run mypy)
 
-# Step 9: coverage report & thresholds
+# Step 9: pytest with coverage
+(cd "$HOST_DIR" && HYPOTHESIS_PROFILE=ci run_step 9 "Pytest with Coverage" uv run coverage run -m pytest)
+
+# Step 10: coverage report & thresholds
 (cd "$HOST_DIR" && uv run coverage json -o coverage.json)
-run_step 9 "Check Coverage Thresholds" python3 "$REPO_ROOT/scripts/check_coverage.py" --file "$HOST_DIR/coverage.json"
+run_step 10 "Check Coverage Thresholds" python3 "$REPO_ROOT/scripts/check_coverage.py" --file "$HOST_DIR/coverage.json"
 
 echo "============================================================"
 echo "GATE: PASS"

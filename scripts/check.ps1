@@ -11,7 +11,7 @@ function Run-Step {
         [string]$Name,
         [scriptblock]$Action
     )
-    Write-Host "[Step $StepNum/9] $Name..." -ForegroundColor Cyan
+    Write-Host "[Step $StepNum/10] $Name..." -ForegroundColor Cyan
     try {
         & $Action
         if ($LASTEXITCODE -ne 0 -and $null -ne $LASTEXITCODE) {
@@ -41,8 +41,13 @@ Run-Step 2 "Architecture Guard" {
     python "$RepoRoot\scripts\arch_guard.py" --root "$RepoRoot\host\src\heatsense"
 }
 
-# Step 3: uv lock --check
-Run-Step 3 "Verify Lockfile Consistency" {
+# Step 3: check_docs.py
+Run-Step 3 "Check Documentation Integrity" {
+    python "$RepoRoot\scripts\check_docs.py" --root "$RepoRoot"
+}
+
+# Step 4: uv lock --check
+Run-Step 4 "Verify Lockfile Consistency" {
     Push-Location $HostDir
     try {
         uv lock --check
@@ -52,13 +57,13 @@ Run-Step 3 "Verify Lockfile Consistency" {
     }
 }
 
-# Step 4: check_dependencies_doc.py
-Run-Step 4 "Check Dependency Documentation" {
+# Step 5: check_dependencies_doc.py
+Run-Step 5 "Check Dependency Documentation" {
     python "$RepoRoot\scripts\check_dependencies_doc.py"
 }
 
-# Step 5: ruff check
-Run-Step 5 "Ruff Lint" {
+# Step 6: ruff check
+Run-Step 6 "Ruff Lint" {
     Push-Location $HostDir
     try {
         uv run ruff check
@@ -68,8 +73,8 @@ Run-Step 5 "Ruff Lint" {
     }
 }
 
-# Step 6: ruff format --check
-Run-Step 6 "Ruff Format Check" {
+# Step 7: ruff format --check
+Run-Step 7 "Ruff Format Check" {
     Push-Location $HostDir
     try {
         uv run ruff format --check
@@ -79,8 +84,8 @@ Run-Step 6 "Ruff Format Check" {
     }
 }
 
-# Step 7: mypy
-Run-Step 7 "Mypy Strict Type Check" {
+# Step 8: mypy
+Run-Step 8 "Mypy Strict Type Check" {
     Push-Location $HostDir
     try {
         uv run mypy
@@ -90,8 +95,8 @@ Run-Step 7 "Mypy Strict Type Check" {
     }
 }
 
-# Step 8: pytest with coverage
-Run-Step 8 "Pytest with Coverage" {
+# Step 9: pytest with coverage
+Run-Step 9 "Pytest with Coverage" {
     Push-Location $HostDir
     try {
         $env:HYPOTHESIS_PROFILE = "ci"
@@ -103,8 +108,8 @@ Run-Step 8 "Pytest with Coverage" {
     }
 }
 
-# Step 9: coverage report & thresholds
-Run-Step 9 "Check Coverage Thresholds" {
+# Step 10: coverage report & thresholds
+Run-Step 10 "Check Coverage Thresholds" {
     Push-Location $HostDir
     try {
         uv run coverage json -o coverage.json
