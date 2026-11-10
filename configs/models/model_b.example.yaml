@@ -1,0 +1,7 @@
+model:
+  id: model_b_physics_informed
+  algorithm: xgboost_regressor
+  input_family: digital_twin_estimated_states_and_residual_features
+  target: same_target_as_model_a
+  random_seed: 42
+  split_strategy: identical_to_model_a

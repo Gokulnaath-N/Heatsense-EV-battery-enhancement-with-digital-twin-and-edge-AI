@@ -44,3 +44,27 @@ Every entry must cite specific outputs, tables, plots, or documentary metadata o
 * **Confidence Level**: High (based on direct file inspection).
 * **Next Action**: Execute `00_dataset_inventory.ipynb` with user to catalog all cells, test types, and date ranges.
 
+
+
+### [DEC-002] Integration of MIT-Stanford Battery Degradation Dataset
+* **Timestamp**: 2026-11-10
+* **Source**: Direct inspection of `data/raw/MIT_battery_degradation_dataset/`.
+* **Observation**:
+  - Found three MATLAB MAT files (~8.26 GB total):
+    1. `2017-05-12_batchdata_updated_struct_errorcorrect.mat` (3.02 GB)
+    2. `2017-06-30_batchdata_updated_struct_errorcorrect.mat` (2.00 GB)
+    3. `2018-04-12_batchdata_updated_struct_errorcorrect.mat` (3.23 GB)
+  - Dataset represents the Severson et al. (Nature Energy 2019) cohort of 124 commercial A123 18650 LFP cells ($1.1\text{Ah}$, nominal $3.3\text{V}$) cycled to end-of-life under diverse fast-charging protocols.
+* **Physical & Modeling Interpretation**:
+  - Chemistry is **Lithium Iron Phosphate (LFP)**, contrasting with the **NCA** chemistry of the NASA Ames dataset.
+  - LFP exhibits a flat open-circuit voltage (OCV) profile over the $20\%-80\%$ SoC range, placing higher demands on EKF innovation correction and Coulomb counting accuracy.
+  - The 124-cell statistical volume provides the exact empirical power needed to train and test **Model A vs Model B** on true capacity-based SoH and Remaining Useful Life (RUL) with rigorous, leak-free cell-wise cross-validation ($k$-fold across distinct cells).
+* **Known Limitations & Caveats**:
+  - The files are large MATLAB v7.3 HDF5 structures; reading full 8.26 GB batches into RAM simultaneously will cause memory exhaustion. Ingestion must stream or lazily extract cycle summaries and representative time-series into compact Parquet caches.
+  - Fast-charging cycling protocols ($3.6\text{C}$ to $6\text{C}$) involve severe self-heating and higher thermal dissipation than benign bench discharge rates.
+* **Decision**: Adopt a dual-dataset strategy:
+  1. Use **NASA Ames dataset** for ECM impedance validation, EKF parameter tuning under ambient temperature variations, and two-node thermal modeling.
+  2. Use **MIT dataset** for large-scale Model A vs Model B comparative machine learning benchmarks, SoH estimation, and RUL degradation modeling.
+  3. Keep their ingestion pipelines completely separate via dedicated adapters (`NasaDatasetAdapter` and `MitDatasetAdapter`).
+* **Confidence Level**: High.
+* **Next Action**: Update `00_dataset_inventory.ipynb` to audit both datasets and present clean summary statistics.

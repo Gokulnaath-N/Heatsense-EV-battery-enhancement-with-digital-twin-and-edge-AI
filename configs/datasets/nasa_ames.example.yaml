@@ -1,0 +1,15 @@
+dataset:
+  id: nasa_ames_battery
+  root_env: HEATSENSE_DATASET_ROOT
+  expected_layout:
+    sequential_data_directory: data
+    extra_information_directory: extra_infos
+    metadata_file: metadata
+  format: unknown_until_inspected
+  timestamp_column: unknown_until_inspected
+  voltage_column: unknown_until_inspected
+  current_column: unknown_until_inspected
+  temperature_column: unknown_until_inspected
+  capacity_column: unknown_until_inspected
+  units: unknown_until_inspected
+  current_sign_convention: unknown_until_inspected

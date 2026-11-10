@@ -1,0 +1,27 @@
+project:
+  name: HeatSense
+  scope: cell_level
+  mode: offline_dataset
+
+paths:
+  # Prefer HEATSENSE_DATASET_ROOT environment variable for machine-specific paths.
+  dataset_root_env: HEATSENSE_DATASET_ROOT
+  interim: data/interim
+  processed: data/processed
+  features: data/features
+  artifacts: artifacts
+
+estimation:
+  current_sign_convention: discharge_positive
+  ekf_state_names: [soc, v1, v2]
+  resistance_estimation: separate_slow_parameter_estimator
+
+ml:
+  model_a: direct_sensor_features
+  model_b: digital_twin_features
+  anomaly_model: isolation_forest
+  ruls_enabled: false
+
+safety:
+  ml_is_advisory_only: true
+  ai_controls_hardware_relay: false

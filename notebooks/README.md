@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # notebooks
 
 ## Purpose
@@ -25,3 +26,6 @@ Software / Human decision
 ## Related documents
 - [docs/glossary.md](../docs/glossary.md)
 - [host/parameters/README.md](../host/parameters/README.md)
+=======
+Exploratory notebooks only. Production logic must be moved into `backend/src/heatsense/` and covered by tests.
+>>>>>>> a918cb1 (feat(scaffold): initialize HeatSense architecture, planning documents, and phase 1 notebooks)

@@ -1,28 +1,10 @@
-# data
+# Data Workspace
 
-## Purpose
-Maintains the directory hierarchy for raw sensor logs, processed datasets, test sessions, and external reference databases.
+The raw battery datasets stay read-only at their configured paths (`HEATSENSE_DATASET_ROOT` and `data/raw/`).
 
-## Goal served
-G6 (Reproducibility and Hygiene). Enforces strict isolation of dynamic datasets and runtime databases from git version control.
+- `raw/`: Raw datasets (NASA Ames Battery Dataset, MIT-Stanford Battery Degradation Dataset). Never modify or delete files.
+- `interim/`: Local normalized intermediate outputs and extracted cycle slices.
+- `processed/`: Cleaned, validated, unit-normalized, analysis-ready datasets.
+- `features/`: Feature matrices and target tables for Model A and Model B.
 
-## Contains
-Categorized data storage folders:
-- `raw/`: Unmodified binary serial stream dumps and raw CSV logs.
-- `processed/`: Calibrated, synchronized, and feature-engineered datasets.
-- `sessions/`: Local SQLite session databases generated during runs.
-- `external/`: Public battery datasets (e.g., NASA, Oxford) downloaded manually for reference.
-
-## Rules
-- MAY: Contain locally written datasets, SQLite files, and session captures during development and testing.
-- MUST NOT: Track any data files in git other than this README.md and `.gitkeep` markers.
-
-## Status
-Active directory skeleton; data contents are generated at runtime.
-
-## Owner
-Software / Human decision
-
-## Related documents
-- [.gitignore](../.gitignore)
-- [docs/glossary.md](../docs/glossary.md)
+All generated data is excluded from Git via `.gitignore`.

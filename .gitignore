@@ -38,11 +38,13 @@ coverage.json
 htmlcov/
 coverage.xml
 
-# Node / Dashboard
+# Node / Dashboard / Frontend
 node_modules/
 .npm/
 .vite/
 *.log
+dist/
+coverage/
 
 # PlatformIO / Embedded
 .pio/
@@ -83,9 +85,15 @@ runs/*
 # Data Directories (keep structure via .gitkeep and README.md, ignore all raw/session data)
 data/raw/*
 !data/raw/.gitkeep
-data/processed/*
+data/interim/**
+!data/interim/.gitkeep
+data/processed/**
 !data/processed/.gitkeep
+data/features/**
+!data/features/.gitkeep
 data/sessions/*
 !data/sessions/.gitkeep
 data/external/*
 !data/external/.gitkeep
+artifacts/**
+!artifacts/README.md

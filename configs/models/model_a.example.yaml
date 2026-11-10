@@ -1,0 +1,7 @@
+model:
+  id: model_a_direct_baseline
+  algorithm: xgboost_regressor
+  input_family: raw_sensor_derived_features
+  target: to_be_defined_after_dataset_inspection
+  random_seed: 42
+  split_strategy: group_by_cell_and_or_time

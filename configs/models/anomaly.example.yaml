@@ -1,0 +1,9 @@
+model:
+  id: anomaly_isolation_forest
+  algorithm: isolation_forest
+  features:
+    - normalized_innovation
+    - rolling_residual_statistics
+    - resistance_trend
+    - temperature_load_features
+  labels: optional_for_evaluation
