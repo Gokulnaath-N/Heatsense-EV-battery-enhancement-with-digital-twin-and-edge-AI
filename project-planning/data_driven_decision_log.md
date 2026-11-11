@@ -193,5 +193,75 @@ Every entry must cite specific outputs, tables, plots, or documentary metadata o
 * **Next Action**: Advance to Notebook 10 (`10_model_comparison_and_hyperparameter_selection.ipynb`).
 
 
+### [DEC-012] LOCO-CV Generalization & Production Hyperparameter Selection
+* **Timestamp**: 2026-11-11
+* **Source**: Direct execution of Notebook 10 (`10_model_comparison_and_hyperparameter_selection.ipynb`).
+* **Empirical Observations**:
+  1. **Leave-One-Cell-Out Cross-Validation (LOCO-CV) — Default Hyperparameters**:
+     - `B0005` (168 test cycles): Model A RMSE = 29.9 mAh, Model B RMSE = 35.9 mAh ($R^2 = 0.964$).
+     - `B0006` (168 test cycles): Model A RMSE = 71.1 mAh, Model B RMSE = 75.5 mAh ($R^2 = 0.910$).
+     - `B0018` (132 test cycles): Model A RMSE = 38.2 mAh, Model B RMSE = 29.5 mAh (+22.8% uplift, $R^2 = 0.963$).
+     - Mean untuned Model B RMSE across unseen cells: **47.0 mAh** (mean $R^2 = 0.946$).
+  2. **Hyperparameter Grid Search**:
+     - Optimal configuration: `max_depth=2`, `learning_rate=0.10`, `n_estimators=80`, `subsample=0.8`.
+     - Reduced mean LOCO-CV RMSE from $47.0\,\text{mAh} \to \mathbf{42.3\,\text{mAh}}$ across all 3 held-out cells (`B0005`: 22.8 mAh, `B0006`: 67.8 mAh, `B0018`: 36.4 mAh).
+     - Tuned shallow trees (`max_depth=2`) prevented overfitting to cell-specific degradation nuances and beat untuned Model A on `B0005` and `B0006`.
+  3. **Identified Structural Boundary (Tree Extrapolation Limit)**:
+     - On `B0006`, initial capacity starts at $2.035\,\text{Ah}$ and drops below $1.20\,\text{Ah}$, outside the target span ($1.856\text{–}1.325\,\text{Ah}$) of training cells `B0005` and `B0018`. Tree ensembles naturally clamp predictions at training bounds, highlighting an empirical motivation to test continuous extrapolating architectures (MLP / Ridge / Sequence Models) in Notebook 11.
+* **Modeling Decisions**:
+  - Freeze tuned XGBoost Model B specification (`max_depth=2, learning_rate=0.10, n_estimators=80, subsample=0.8`) with 11 verified sensor + digital-twin input channels for `backend/src/heatsense/ml/model_b.py`.
+  - Proceed to Notebook 11 (`11_deep_learning_and_pytorch_feasibility.ipynb`) to evaluate whether continuous/deep sequence models outperform shallow GBDTs on extrapolation and edge latency.
+* **Confidence Level**: High.
+* **Next Action**: Populate and execute Notebook 11 (`11_deep_learning_and_pytorch_feasibility.ipynb`).
+
+
+### [DEC-013] ML vs DL Decision: Reject PyTorch/Deep Learning in Phase 1; Adopt Hybrid Ridge + XGBoost ML
+* **Timestamp**: 2026-11-11
+* **Source**: Direct execution of Notebook 11 (`11_deep_learning_and_pytorch_feasibility.ipynb`).
+* **Empirical Observations**:
+  1. **LOCO-CV Generalization Scorecard Across Unseen Cells (`B0005`, `B0006`, `B0018`)**:
+     - `XGBoost (Tuned, d=2)`: Mean RMSE = **42.3 mAh** (MAE = 32.6 mAh, $R^2 = 0.952$) — clamps at `B0006` out-of-range boundaries (`67.8 mAh` on `B0006`).
+     - `Ridge (Continuous Linear)`: Mean RMSE = **26.2 mAh** (MAE = 23.8 mAh, $R^2 = 0.982$) — extrapolates cleanly on `B0006` (`33.0 mAh`).
+     - `MLP Neural Net (32-16 ReLU)`: Mean RMSE = **122.6 mAh** (MAE = 101.1 mAh, $R^2 = 0.626$) — diverges severely after Cycle 100 on `B0006` (`190.9 mAh`).
+     - `Sequence MLP (W=5 cycles)`: Mean RMSE = **208.6 mAh** (`392.9 mAh` on `B0006`) — catastrophic temporal overfitting on small cell cohorts ($N \approx 304$ training sequences).
+     - `Hybrid (Ridge + XGBoost Residual)`: Mean RMSE = **24.3 mAh** (MAE = 21.8 mAh, **$R^2 = 0.985$**), achieving **`B0005`: 29.0 mAh**, **`B0006`: 32.4 mAh**, **`B0018`: 11.5 mAh**.
+  2. **Parameter-to-Sample & Overfitting Audit**:
+     - Deep sequence architectures (2-layer PyTorch LSTM, $h=64$) require **53,057 parameters** vs ~304 training trajectories (**174.5 parameters per sample**), violating statistical sample adequacy.
+  3. **Edge Inference Latency**:
+     - Single-cycle median CPU latency: Ridge (`168.1 us`), XGBoost (`199.0 us`), combined Hybrid `< 0.4 ms` with 0 MB PyTorch runtime overhead.
+* **Modeling Decisions**:
+  - **NO-GO on Deep Learning / PyTorch in Phase 1**: Keep `torch` uninstalled and deferred in `docs/DEPENDENCIES.md` (revisit trigger: multi-cell expansion $N \ge 5,000$ cycles / $\ge 20$ cells on MIT-Stanford).
+  - **Adopt Physics-Informed Hybrid ML (`Ridge + XGBoost Residual`)** as the flagship SoH proxy architecture for `backend/src/heatsense/ml/model_b.py` — cutting mean unseen-cell RMSE by **42.6%** (`42.3 mAh -> 24.3 mAh`) over standalone XGBoost while solving out-of-range cell extrapolation.
+* **Confidence Level**: High.
+* **Next Action**: Populate and execute Notebook 12 (`12_software_fault_injection_and_robustness.ipynb`) for final Phase 1 robustness and anomaly verification.
+
+
+### [DEC-014] Software Fault Injection, Noise Immunity & Phase 1 Pre-Hardware Sign-Off
+* **Timestamp**: 2026-11-11
+* **Source**: Direct execution of Notebook 12 (`12_software_fault_injection_and_robustness.ipynb`).
+* **Empirical Observations**:
+  1. **Healthy Closed-Loop Baseline (`05122.csv`)**:
+     - Innovation-gated 2RC EKF (`|e_v| <= 55 mV`) achieved **43.57 mV** voltage RMSE; Two-Node Thermal observer achieved **0.774 °C** surface RMSE; **0 healthy false alarms** (`Peak V CUSUM = 4.28`, `Peak T CUSUM = 0.00 < 8.0`).
+  2. **Multi-Fault Injection Latency & Selectivity (Fault Onset = `15.0 min`)**:
+     - `+60 mOhm` Impedance Surge: Detected in **28.4 s** on electrical CUSUM (`Peak = 16.2`); thermal unaffected (`0.0`).
+     - `-120 mV` Voltage Bias: Detected in **28.4 s** on electrical CUSUM (`Peak = 15.7`); thermal unaffected (`0.0`).
+     - `+15%` Current Scale Drift: Detected on both thermal (**784.7 s**) and electrical (**1064.9 s**) CUSUM channels.
+     - `+5.0 °C` Thermal Precursor: Detected in **10.1 s** on thermal CUSUM (`Peak = 1571.5`); electrical unaffected (`4.3`).
+     - Transient `20 mV` ADC Noise Burst (`15–22 min`, `seed=42`): **IMMUNE (0 false trips)** (`Peak V = 4.4 < 8.0`).
+  3. **Hybrid ML (`Ridge + XGBoost`) Stress-Test on Held-Out `B0018` ($N = 132$)**:
+     - Clean Baseline: **11.5 mAh** ($R^2 = 0.994$).
+     - Voltage Drift (`-50 mV`): **27.9 mAh** ($R^2 = 0.967$), Temp Bias (`+3.0 °C`): **5.8 mAh** ($R^2 = 0.999$), Multi-Sensor Noise: **21.2 mAh** ($R^2 = 0.981$) — all well inside `40 mAh` tolerance.
+     - Critical Sensor Vulnerabilities Identified: `+10%` Current Gain Drift degraded RMSE to **111.4 mAh** ($R^2 = 0.479$), and Stuck `rs_identified` (`0.040 Ohm`) degraded RMSE to **193.4 mAh** ($R^2 = -0.571$).
+* **Modeling Decisions**:
+  - Adopt the Innovation-Gated 2RC EKF + Dual-Channel CUSUM architecture in `host/src/heatsense/` (`advisory` only; firmware retains sole relay cutoff authority).
+  - Enforce plausibility & calibration guards on INA219 shunt current gain and online step-response `Rs` identification before passing features to the Hybrid ML SoH estimator.
+  - Formally close Phase 1 Exploratory Data & Feasibility Analysis (Notebooks 00–12).
+* **Confidence Level**: High.
+* **Next Action**: Transition to Days 4–7 modular Clean/Hexagonal Python backend (`host/src/heatsense/`) and React dashboard implementation.
+
+
+
+
+
 
 
