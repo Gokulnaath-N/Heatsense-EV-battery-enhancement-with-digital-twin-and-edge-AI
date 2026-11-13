@@ -20,6 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum, IntFlag, StrEnum
+from typing import TypeAlias
 
 
 class FaultBit(IntFlag):
@@ -132,7 +133,7 @@ class HC1Frame:
     arg: int
 
 
-type WireFrame = HS1Frame | HE1Frame | HI1Frame | HA1Frame | HC1Frame
+WireFrame: TypeAlias = HS1Frame | HE1Frame | HI1Frame | HA1Frame | HC1Frame
 
 
 @dataclass(frozen=True, slots=True)
@@ -151,7 +152,7 @@ class ErrorEvent:
     offset: int
 
 
-type DecodeEvent = FrameEvent | ErrorEvent
+DecodeEvent: TypeAlias = FrameEvent | ErrorEvent
 
 
 class SeqDeltaKind(StrEnum):
