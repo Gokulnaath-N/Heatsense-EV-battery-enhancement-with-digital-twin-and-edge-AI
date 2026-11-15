@@ -53,6 +53,7 @@ test_files = [
     repo_root / "host" / "tests" / "unit" / "research" / "test_lfp_calibration.py",
     repo_root / "host" / "tests" / "unit" / "research" / "test_mit_physics_features.py",
     repo_root / "host" / "tests" / "unit" / "research" / "test_ml_benchmarking.py",
+    repo_root / "host" / "tests" / "unit" / "research" / "test_ml_optimization.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_crc16.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_frames_vo.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_result.py",
