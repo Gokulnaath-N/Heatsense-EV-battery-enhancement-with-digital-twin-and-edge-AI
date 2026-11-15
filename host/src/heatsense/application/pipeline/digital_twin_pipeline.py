@@ -12,6 +12,14 @@ Safety & Advisory Boundary:
 Current Sign Convention:
     Current I > 0 denotes DISCHARGE. Documented in all estimators.
 
+Residual Sign Convention:
+    v_residual_v = v_terminal_v - v_terminal_pred_v (measured minus predicted).
+
+Initialization Strategy (Approximation):
+    When initial_temp_c is None, the thermal observer initializes its ambient and initial
+    temperature states from the first valid frame's surface temperature measurement.
+    This is documented as an initial-condition strategy, NOT a physical ambient sensor measurement.
+
 MAY import:
     stdlib, numpy, heatsense.domain.*, heatsense.application.*
 
@@ -21,6 +29,7 @@ MUST NOT import:
 
 from __future__ import annotations
 
+import math
 from typing import Final
 from heatsense.domain.entities.battery_state import BatteryState, TwinStatus
 from heatsense.domain.services.cusum import CusumParameters, DualCusumDetector
@@ -38,8 +47,14 @@ class DigitalTwinPipeline:
         thermal_params: ThermalParameters | None = None,
         cusum_params: CusumParameters | None = None,
         initial_soc: float = 1.0,
-        initial_temp_c: float = 24.0,
+        initial_temp_c: float | None = None,
     ) -> None:
+        self._ekf_params = ekf_params
+        self._thermal_params = thermal_params
+        self._cusum_params = cusum_params
+        self._initial_soc = initial_soc
+        self._initial_temp_c = initial_temp_c
+
         self._ekf = InnovationGatedEKF(ekf_params, initial_soc=initial_soc)
         self._thermal = TwoNodeThermalObserver(thermal_params, initial_temp_c=initial_temp_c)
         self._cusum = DualCusumDetector(cusum_params)
@@ -61,6 +76,16 @@ class DigitalTwinPipeline:
         """Access underlying CUSUM detector."""
         return self._cusum
 
+    def reset(self, initial_soc: float | None = None, initial_temp_c: float | None = None) -> None:
+        """Reset observers and timing counters for a new replay or test session."""
+        soc = self._initial_soc if initial_soc is None else initial_soc
+        temp = self._initial_temp_c if initial_temp_c is None else initial_temp_c
+        self._ekf = InnovationGatedEKF(self._ekf_params, initial_soc=soc)
+        self._thermal = TwoNodeThermalObserver(self._thermal_params, initial_temp_c=temp)
+        self._cusum = DualCusumDetector(self._cusum_params)
+        self._prev_t_ms = None
+        self._t0_ms = None
+
     def process_frame(self, frame: HS1Frame) -> BatteryState:
         """Transform one wire frame through the digital twin observers.
         
@@ -76,6 +101,15 @@ class DigitalTwinPipeline:
         
         # Surface temperature in deci-Celsius -> Celsius (use peak surface thermocouple)
         t_surface_c = max(frame.t1_dc, frame.t2_dc, frame.t3_dc) / 10.0
+
+        if not math.isfinite(t_surface_c):
+            raise ValueError(f"Non-finite surface temperature measurement in frame seq={frame.seq}: {t_surface_c}")
+        if not (-40.0 <= t_surface_c <= 100.0):
+            raise ValueError(f"Surface temperature out of physical bounds in frame seq={frame.seq}: {t_surface_c} C")
+
+        # Auto-initialize thermal observer on first frame if not explicitly configured
+        if not self._thermal.is_initialized:
+            self._thermal.initialize_from_measurement(t_surface_c)
         
         if self._t0_ms is None:
             self._t0_ms = frame.t_ms
@@ -108,11 +142,14 @@ class DigitalTwinPipeline:
             elapsed_min=elapsed_min,
         )
 
-        # 5. Assemble Domain BatteryState Entity
+        # 5. Assemble Domain BatteryState Entity with authoritative EKF voltage prediction
+        # Residual sign convention: v_residual_v = v_terminal_v - v_terminal_pred_v
         return BatteryState(
             timestamp_s=frame.t_ms / 1000.0,
             seq=frame.seq,
             v_terminal_v=v_terminal_v,
+            v_terminal_pred_v=ekf_res.v_terminal_pred_v,
+            v_residual_v=ekf_res.voltage_error_v,
             i_a=i_a,
             soc_estimated=ekf_res.soc_estimated,
             v1_overpotential_v=ekf_res.v1_overpotential_v,
@@ -127,4 +164,3 @@ class DigitalTwinPipeline:
             status=cusum_res.status,
             precursor_alert_active=cusum_res.precursor_alert_active,
         )
-
