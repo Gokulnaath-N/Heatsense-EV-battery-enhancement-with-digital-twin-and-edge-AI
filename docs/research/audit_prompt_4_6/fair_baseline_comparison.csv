@@ -1,0 +1,10 @@
+candidate_model,n_samples,mae_pct,rmse_pct,r2_score,max_abs_error_pct,mean_signed_bias_pct,delta_mae_vs_p44_ridge,wilcoxon_p_value,statistically_significant_diff
+P4.4_Model_B_Ridge,124,0.487743,0.905158,0.553358,7.587845,-0.022950,0.000000,1.000000,False
+P4.4_Model_B_XGBoost,124,0.428443,0.892205,0.566049,7.660649,-0.056710,-0.059300,0.014039,True
+P4.6_Model_B_Ridge (Optimised),124,0.451772,0.881576,0.576327,7.587845,0.003591,-0.035971,0.061373,False
+P4.6_Model_B_ElasticNet (Optimised),124,0.434696,0.886182,0.571888,7.695847,-0.004243,-0.053048,0.063554,False
+P4.6_Model_B_RandomForest (Optimised),124,0.440376,0.899135,0.559282,7.786934,-0.031858,-0.047368,0.026461,True
+P4.6_Model_B_XGBoost (Optimised),124,0.448975,0.902767,0.555714,7.775990,-0.046082,-0.038768,0.052370,False
+P4.6_Model_A_Ridge (Best Model A),124,0.769811,1.256525,0.139297,8.988616,0.009981,0.282068,0.000000,True
+P4.6_Model_AB_Ridge (Best Model AB),124,0.459174,0.888273,0.569866,7.409061,-0.000682,-0.028569,0.158121,False
+P4.6_Model_AB_XGBoost,124,0.470022,0.956349,0.501409,7.903462,-0.035156,-0.017721,0.291505,False
