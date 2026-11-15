@@ -11,6 +11,12 @@ Vocabulary Constraints (Mandatory):
 Current Sign Convention:
     Current I > 0 denotes DISCHARGE. Documented in all estimators.
 
+Initialization Strategy (Approximation):
+    Before active current discharge begins, the cell is assumed to be in near thermal
+    equilibrium with its local surroundings. Thus, T_surf(0) is used as an initial condition
+    approximation for T_core(0), T_surf(0), and T_amb.
+    This is documented as an initial-condition strategy, NOT a physical ambient sensor measurement.
+
 MAY import:
     stdlib, numpy, heatsense.domain.value_objects, heatsense.domain.entities, heatsense.domain.errors.
 
@@ -54,11 +60,52 @@ class TwoNodeThermalObserver:
         C_surf * d(T_surf)/dt = (T_core - T_surf) / R_cond - (T_surf - T_amb) / R_conv
     """
 
-    def __init__(self, params: ThermalParameters | None = None, initial_temp_c: float = 24.0) -> None:
+    def __init__(self, params: ThermalParameters | None = None, initial_temp_c: float | None = None) -> None:
         self._p = params or ThermalParameters()
-        self._t_amb = float(initial_temp_c)
-        self._t_core = float(initial_temp_c)
-        self._t_surf = float(initial_temp_c)
+        self._is_initialized = initial_temp_c is not None
+        if initial_temp_c is not None:
+            if not math.isfinite(initial_temp_c):
+                raise ValueError(f"Explicit initial temperature must be finite, got {initial_temp_c}")
+            if not (-40.0 <= initial_temp_c <= 100.0):
+                raise ValueError(
+                    f"Explicit initial temperature out of physical range [-40, 100] C: {initial_temp_c}"
+                )
+            self._t_amb = float(initial_temp_c)
+            self._t_core = float(initial_temp_c)
+            self._t_surf = float(initial_temp_c)
+        else:
+            self._t_amb = 24.0
+            self._t_core = 24.0
+            self._t_surf = 24.0
+
+    @property
+    def is_initialized(self) -> bool:
+        """Whether thermal states have been initialized (explicitly or from first frame)."""
+        return self._is_initialized
+
+    @property
+    def t_amb_c(self) -> float:
+        """Ambient boundary temperature in Celsius."""
+        return self._t_amb
+
+    def initialize_from_measurement(self, t_surface_measured_c: float) -> bool:
+        """Initialize ambient and observer temperature states from initial measured surface temperature.
+        
+        Initialization occurs only once per observer session.
+        """
+        if self._is_initialized:
+            return False
+        if not math.isfinite(t_surface_measured_c):
+            raise ValueError(f"Initial temperature measurement must be finite, got {t_surface_measured_c}")
+        if not (-40.0 <= t_surface_measured_c <= 100.0):
+            raise ValueError(
+                f"Initial temperature measurement out of physical range [-40, 100] C: {t_surface_measured_c}"
+            )
+        self._t_amb = float(t_surface_measured_c)
+        self._t_core = float(t_surface_measured_c)
+        self._t_surf = float(t_surface_measured_c)
+        self._is_initialized = True
+        return True
 
     @property
     def t_core_estimated_c(self) -> float:
@@ -80,6 +127,12 @@ class TwoNodeThermalObserver:
         
         Sub-stepping is used to maintain Euler integration stability.
         """
+        if not self._is_initialized:
+            self.initialize_from_measurement(t_surface_measured_c)
+
+        if not math.isfinite(t_surface_measured_c):
+            raise ValueError(f"Measured surface temperature must be finite, got {t_surface_measured_c}")
+
         dt = max(dt_s, 0.001)
 
         # Internal Joule heating: Q_gen = I^2 * R_total
@@ -106,4 +159,3 @@ class TwoNodeThermalObserver:
             heat_generated_w=q_gen,
             surface_residual_c=residual_c,
         )
-
