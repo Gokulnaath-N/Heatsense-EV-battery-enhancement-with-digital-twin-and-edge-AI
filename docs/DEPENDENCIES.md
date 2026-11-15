@@ -40,6 +40,9 @@ To update dependencies: re-run the verification protocol in Prompt 02, refresh t
 | `mypy` | 2.4.0 | >=1.10,<3 | Static type checker enforcing strict typing across codebase | 2026-10-01 | 2026-10-24 |
 | `types-pyserial` | 3.5.0.20260712 | unpinned stub | Type stubs for pyserial | 2026-07-12 | 2026-10-24 |
 | `types-pyyaml` | 6.0.12.20260906 | unpinned stub | Type stubs for PyYAML | 2026-09-06 | 2026-10-24 |
+| `h5py` | 3.16.0 | >=3.10,<4 | Ingestion of MATLAB v7.3 HDF5 battery degradation datasets (Stanford/MIT cohort) | 2025-11-01 | 2026-11-14 |
+| `duckdb` | 2.0.0 | >=1.0,<3 | High-performance, zero-DLL columnar Parquet serialization and streaming queries for large datasets | 2026-04-15 | 2026-11-14 |
+
 
 ## Build requirements
 | Package | Resolved version | Why |
