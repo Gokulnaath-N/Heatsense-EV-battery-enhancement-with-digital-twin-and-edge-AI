@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --void: #070B12;
+    --graphite: #0C1420;
+    --tertiary: #101B29;
+    --elevated: #142131;
+    --border-primary: #243548;
+    --border-subtle: #1B2A39;
+    --cyan-ion: #63DDF2;
+    --amber-thermal: #FFB65C;
+    --coral-alert: #FF647C;
+    --mint-signal: #83D9B2;
+  }
+
+  body {
+    background-color: #070B12;
+    color: #EDF4FA;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Custom subtle dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #070B12;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #243548;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #164F60;
+  }
+}
+
+@layer utilities {
+  /* Engineering grid background */
+  .engineering-grid {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(27, 42, 57, 0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 42, 57, 0.45) 1px, transparent 1px);
+  }
+
+  .engineering-grid-subtle {
+    background-size: 24px 24px;
+    background-image: 
+      linear-gradient(to right, rgba(27, 42, 57, 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 42, 57, 0.25) 1px, transparent 1px);
+  }
+
+  /* Radial light fields for spatial depth */
+  .radial-glow-cyan {
+    background: radial-gradient(circle 600px at 50% -20%, rgba(99, 221, 242, 0.08), transparent 70%);
+  }
+
+  .radial-glow-amber {
+    background: radial-gradient(circle 500px at 80% 20%, rgba(255, 182, 92, 0.06), transparent 70%);
+  }
+
+  .radial-glow-center {
+    background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(22, 79, 96, 0.25), transparent 75%);
+  }
+
+  /* Glass elevated surfaces */
+  .glass-panel {
+    background: rgba(20, 33, 49, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(36, 53, 72, 0.75);
+  }
+
+  .glass-elevated {
+    background: rgba(25, 42, 60, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 221, 242, 0.2);
+  }
+
+  /* Technical typography accents */
+  .tech-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+}
+
+/* Reduced motion preference respect */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
