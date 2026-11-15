@@ -16,6 +16,9 @@ Vocabulary Constraints (Mandatory):
 Current Sign Convention:
     Current I > 0 denotes DISCHARGE. Documented in all estimators and entities.
 
+Residual Sign Convention:
+    v_residual_v = v_terminal_v - v_terminal_pred_v (measured minus predicted).
+
 MAY import:
     stdlib, numpy, heatsense.domain.value_objects, heatsense.domain.errors.
 
@@ -47,11 +50,16 @@ class BatteryState:
     
     Current Sign Convention:
         i_a > 0 represents DISCHARGE current.
+
+    Residual Sign Convention:
+        v_residual_v = v_terminal_v - v_terminal_pred_v (measured minus predicted).
     """
 
     timestamp_s: float
     seq: int
     v_terminal_v: float
+    v_terminal_pred_v: float
+    v_residual_v: float
     i_a: float
     soc_estimated: float
     v1_overpotential_v: float
@@ -65,4 +73,3 @@ class BatteryState:
     cusum_thermal: float
     status: TwinStatus
     precursor_alert_active: bool
-
