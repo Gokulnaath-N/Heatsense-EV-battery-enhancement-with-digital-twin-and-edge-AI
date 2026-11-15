@@ -35,16 +35,24 @@ if "pytest" not in sys.modules:
     mock_pytest.mark = Mark()
     sys.modules["pytest"] = mock_pytest
 
-# 2. Add host/src to sys.path
+# 2. Add host/src and repo_root to sys.path
 repo_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(repo_root / "host" / "src"))
+sys.path.insert(0, str(repo_root))
 
 test_files = [
     repo_root / "host" / "tests" / "unit" / "domain" / "test_ekf.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_thermal.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_cusum.py",
+    repo_root / "host" / "tests" / "unit" / "domain" / "test_voltage_residual_issue01.py",
+    repo_root / "host" / "tests" / "unit" / "domain" / "test_thermal_initialization_issue02.py",
     repo_root / "host" / "tests" / "unit" / "application" / "test_digital_twin_pipeline.py",
+    repo_root / "host" / "tests" / "unit" / "interfaces" / "test_api_endpoints_issue03.py",
     repo_root / "host" / "tests" / "unit" / "infrastructure" / "test_hybrid_ml.py",
+    repo_root / "host" / "tests" / "unit" / "research" / "test_mit_ingestion.py",
+    repo_root / "host" / "tests" / "unit" / "research" / "test_lfp_calibration.py",
+    repo_root / "host" / "tests" / "unit" / "research" / "test_mit_physics_features.py",
+    repo_root / "host" / "tests" / "unit" / "research" / "test_ml_benchmarking.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_crc16.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_frames_vo.py",
     repo_root / "host" / "tests" / "unit" / "domain" / "test_result.py",
