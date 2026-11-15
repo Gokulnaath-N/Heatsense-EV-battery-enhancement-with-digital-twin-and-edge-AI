@@ -1,0 +1,160 @@
+{
+  "audit_version": "1.0.0",
+  "timestamp": "2026-11-15T10:45:00+05:30",
+  "benchmark_source_directory": "data\\interim\\mit_dataset\\benchmark",
+  "total_files_audited": 8,
+  "files": {
+    "benchmark_manifest.json": {
+      "file_name": "benchmark_manifest.json",
+      "size_bytes": 626,
+      "sha256": "58abc7c58c06275a7273cce901a9d08e2d779d534a2f8d86196ae928c41ee963",
+      "json_top_level_keys": [
+        "benchmark_title",
+        "date",
+        "primary_cohort_size",
+        "extended_cohort_size",
+        "experiments_executed",
+        "files_generated"
+      ],
+      "integrity_status": "VALID_JSON"
+    },
+    "benchmark_predictions.parquet": {
+      "file_name": "benchmark_predictions.parquet",
+      "size_bytes": 6205,
+      "sha256": "ddd1066172c4ed4c96f3c4f7a400ed8e0b56acf48578cb583ecea76e13380ccc",
+      "record_count": 124,
+      "column_count": 10,
+      "columns": [
+        "cell_id",
+        "input_cycle",
+        "target_cycle",
+        "prediction_horizon_cycles",
+        "y_true_soh_pct",
+        "y_pred_model_a_ridge",
+        "y_pred_model_a_xgb",
+        "y_pred_model_b_ridge",
+        "y_pred_model_b_xgb",
+        "y_pred_combined_xgb"
+      ],
+      "total_null_values": 0,
+      "integrity_status": "PRISTINE"
+    },
+    "feature_ablation.parquet": {
+      "file_name": "feature_ablation.parquet",
+      "size_bytes": 4108,
+      "sha256": "cf8a988b64eca9d5a38fe8adc0f3eaf6d857cbad2f1653920cfc13dcba0e5645",
+      "record_count": 24,
+      "column_count": 13,
+      "columns": [
+        "feature_set",
+        "model_name",
+        "n_features",
+        "mae",
+        "rmse",
+        "r2",
+        "mape",
+        "max_error",
+        "mean_prediction",
+        "mean_target",
+        "bias",
+        "latency_us_per_sample",
+        "training_time_s"
+      ],
+      "total_null_values": 0,
+      "integrity_status": "PRISTINE"
+    },
+    "feature_eligibility.json": {
+      "file_name": "feature_eligibility.json",
+      "size_bytes": 1948,
+      "sha256": "1585fcec1f4610f1a0f69cd7bf0fcb9a6d882ab2508f3fcda78d2fcace2d8e41",
+      "json_top_level_keys": [
+        "prohibited_features_experiment_a",
+        "experiment_a_eligible_model_a",
+        "experiment_a_eligible_model_b",
+        "experiment_b_dynamic_only_model_a",
+        "experiment_b_dynamic_only_model_b",
+        "rationale"
+      ],
+      "integrity_status": "VALID_JSON"
+    },
+    "fold_metrics.parquet": {
+      "file_name": "fold_metrics.parquet",
+      "size_bytes": 13171,
+      "sha256": "9450c03f315ba7d2a0814687028e938806e0202fad78a861602c38efbfaa9787",
+      "record_count": 180,
+      "column_count": 14,
+      "columns": [
+        "experiment",
+        "feature_set",
+        "model_name",
+        "fold",
+        "mae",
+        "rmse",
+        "r2",
+        "mape",
+        "max_error",
+        "mean_prediction",
+        "mean_target",
+        "bias",
+        "latency_us_per_sample",
+        "training_time_s"
+      ],
+      "total_null_values": 0,
+      "integrity_status": "PRISTINE"
+    },
+    "hyperparameter_results.parquet": {
+      "file_name": "hyperparameter_results.parquet",
+      "size_bytes": 1381,
+      "sha256": "2f04314aa17647d9937d9c909ac93dc9ca0dda7f603d44d190da595459aaa270",
+      "record_count": 1,
+      "column_count": 5,
+      "columns": [
+        "experiment",
+        "best_mae",
+        "best_params",
+        "tuning_time_s",
+        "n_iterations"
+      ],
+      "total_null_values": 0,
+      "integrity_status": "PRISTINE"
+    },
+    "model_comparison.parquet": {
+      "file_name": "model_comparison.parquet",
+      "size_bytes": 5088,
+      "sha256": "c20fada1e53ce7d6701d94804e90685c0d40a5021a04fbb4cbde449663ea9ee4",
+      "record_count": 36,
+      "column_count": 14,
+      "columns": [
+        "experiment",
+        "feature_set",
+        "model_name",
+        "n_features",
+        "mae",
+        "rmse",
+        "r2",
+        "mape",
+        "max_error",
+        "mean_prediction",
+        "mean_target",
+        "bias",
+        "latency_us_per_sample",
+        "training_time_s"
+      ],
+      "total_null_values": 0,
+      "integrity_status": "PRISTINE"
+    },
+    "split_manifest.json": {
+      "file_name": "split_manifest.json",
+      "size_bytes": 166,
+      "sha256": "e82bb0bd67dbd3e444cd5d00b3a025d68ec6d8a4e8d879184f917db8678341d1",
+      "json_top_level_keys": [
+        "n_splits",
+        "primary_cohort_cells",
+        "random_seed",
+        "splitting_strategy",
+        "cell_overlap_between_train_test"
+      ],
+      "integrity_status": "VALID_JSON"
+    }
+  }
+}
