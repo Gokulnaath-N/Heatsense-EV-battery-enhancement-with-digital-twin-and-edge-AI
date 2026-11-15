@@ -14,6 +14,9 @@ Vocabulary Constraints:
     - "thermal and impedance precursor anomaly detection"
     - NEVER write "measured core temperature" or "thermal runaway prediction".
 
+Residual Sign Convention:
+    v_residual_v = v_terminal_v - v_terminal_pred_v (measured minus predicted).
+
 MAY import:
     stdlib, typing, heatsense.domain.*, heatsense.application.*, fastapi, pydantic.
 
@@ -29,6 +32,7 @@ from typing import Any
 from heatsense.application.alerts.alert_engine import AdvisoryAlert, AlertEngine
 from heatsense.application.pipeline.digital_twin_pipeline import DigitalTwinPipeline
 from heatsense.domain.entities.battery_state import BatteryState, TwinStatus
+from heatsense.domain.value_objects.frames import DeviceStateCode, HS1Frame
 
 try:
     from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -44,6 +48,11 @@ class TelemetryStreamBroadcaster:
 
     def __init__(self) -> None:
         self._active_connections: list[Any] = []
+
+    @property
+    def client_count(self) -> int:
+        """Number of active client connections."""
+        return len(self._active_connections)
 
     async def connect(self, websocket: Any) -> None:
         """Register a new dashboard client connection."""
@@ -118,14 +127,43 @@ def create_app(pipeline: DigitalTwinPipeline, alert_engine: AlertEngine) -> Any:
             return JSONResponse(content={"status": "NORMAL", "detail": "No configured threshold was violated"})
         return JSONResponse(content=asdict(alt))
 
+    @app.post("/api/v1/telemetry/frame")
+    async def ingest_telemetry_frame(frame_data: dict[str, Any]) -> JSONResponse:
+        """Ingest one wire frame, step pipeline, update latest state, and broadcast."""
+        raw_state = frame_data.get("state", DeviceStateCode.ARMED_CLOSED.value)
+        state_code = DeviceStateCode(int(raw_state)) if isinstance(raw_state, int) else DeviceStateCode[str(raw_state)]
+        
+        frame = HS1Frame(
+            seq=int(frame_data.get("seq", 0)),
+            t_ms=int(frame_data.get("t_ms", 0)),
+            v_mv=int(frame_data.get("v_mv", 0)),
+            i_ma=int(frame_data.get("i_ma", 0)),
+            t1_dc=int(frame_data.get("t1_dc", 240)),
+            t2_dc=int(frame_data.get("t2_dc", 240)),
+            t3_dc=int(frame_data.get("t3_dc", 240)),
+            state=state_code,
+            faults=int(frame_data.get("faults", 0)),
+        )
+        state = pipeline.process_frame(frame)
+        alert = alert_engine.evaluate(state)
+        latest_state[0] = state
+        latest_alert[0] = alert
+        await broadcaster.broadcast_state(state)
+        return JSONResponse(content=asdict(state))
+
     @app.websocket("/ws/telemetry")
     async def websocket_telemetry(websocket: WebSocket) -> None:
         """Real-time streaming channel feeding the frontend dashboard."""
         await broadcaster.connect(websocket)
         try:
+            # If a latest state already exists, immediately send it on connection
+            if latest_state[0] is not None:
+                await websocket.send_text(json.dumps(asdict(latest_state[0])))
             while True:
                 # Keepalive ping/pong
-                await websocket.receive_text()
+                msg = await websocket.receive_text()
+                if msg == "ping":
+                    await websocket.send_text("pong")
         except WebSocketDisconnect:
             broadcaster.disconnect(websocket)
 
@@ -137,4 +175,3 @@ def create_app(pipeline: DigitalTwinPipeline, alert_engine: AlertEngine) -> Any:
     app.state.latest_alert = latest_alert
 
     return app
-

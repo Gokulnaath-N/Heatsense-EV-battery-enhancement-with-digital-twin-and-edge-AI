@@ -40,7 +40,7 @@ class DigitalTwinContainer:
 def bootstrap_digital_twin(
     nasa_csv_path: str | Path | None = None,
     initial_soc: float = 1.0,
-    initial_temp_c: float = 24.0,
+    initial_temp_c: float | None = None,
 ) -> DigitalTwinContainer:
     """Assemble and wire concrete adapters into the application pipeline."""
     pipeline = DigitalTwinPipeline(
