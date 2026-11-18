@@ -1,17 +1,20 @@
-"""Storage Adapters.
+"""Storage and Telemetry Replay Adapters.
 
 Responsibility:
-    Implement persistence ports for storing session metadata, telemetry frames, and estimated states in SQLite or files.
+    Implement persistence and data source ports for storing and replaying telemetry frames.
 
 Contains:
-    SqliteSampleRepository, SqliteSessionRepository, CsvExporter, ParquetExporter.
+    NasaReplayAdapter.
 
 MAY import:
     stdlib, sqlite3, heatsense.domain, heatsense.application.
 
 MUST NOT import:
     interfaces, firmware.
-
-Goal served: G1, G6
-Introduced in: Prompt 01   Implemented in: Prompt 08
 """
+
+from __future__ import annotations
+
+from heatsense.infrastructure.storage.nasa_adapter import NasaReplayAdapter
+
+__all__ = ("NasaReplayAdapter",)

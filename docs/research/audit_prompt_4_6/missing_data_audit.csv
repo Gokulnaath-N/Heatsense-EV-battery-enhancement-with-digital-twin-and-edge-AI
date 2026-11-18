@@ -1,0 +1,6 @@
+missing_scenario,dropped_features_count,dropped_features_list,mae_pct,rmse_pct,r2_score,max_error_pct,imputation_strategy,imputation_fit_scope
+0_Baseline_All_Features,0,None,0.437195,0.794963,0.655488,6.309411,SimpleImputer(strategy='median'),Training Partitions Only
+1_Missing_Thermocouple,0,None,0.437195,0.794963,0.655488,6.309411,SimpleImputer(strategy='median'),Training Partitions Only
+2_Missing_Resistance_Step,2,r0_step_ohm; r0_deviation_pct,0.437195,0.794963,0.655488,6.309411,SimpleImputer(strategy='median'),Training Partitions Only
+3_Missing_ECM_Tracking,3,ecm_v_rmse; ecm_v_mae; ecm_v_max_err,0.453731,0.839671,0.615648,6.708771,SimpleImputer(strategy='median'),Training Partitions Only
+4_Missing_Thermal_Observer,1,thermal_heat_gen_est_j,0.421740,0.797758,0.653061,6.493467,SimpleImputer(strategy='median'),Training Partitions Only

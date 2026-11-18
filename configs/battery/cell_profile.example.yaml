@@ -1,0 +1,21 @@
+cell:
+  identifier: example_cell
+  chemistry: unknown
+  nominal_capacity_ah: null
+  nominal_voltage_v: null
+  capacity_reference_source: not_configured
+
+ecm_2rc:
+  rs_ohm: null
+  r1_ohm: null
+  c1_f: null
+  r2_ohm: null
+  c2_f: null
+  ocv_soc_curve: not_configured
+
+thermal_two_node:
+  c_core_j_per_k: null
+  c_surface_j_per_k: null
+  r_core_surface_k_per_w: null
+  r_surface_ambient_k_per_w: null
+  parameter_source: not_configured

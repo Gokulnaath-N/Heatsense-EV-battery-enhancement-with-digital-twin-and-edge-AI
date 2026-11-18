@@ -16,14 +16,14 @@ MUST NOT import:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TypeVar
+from typing import Generic, TypeAlias, TypeVar
 
 T = TypeVar("T")
 E = TypeVar("E")
 
 
 @dataclass(frozen=True, slots=True)
-class Ok[T]:
+class Ok(Generic[T]):
     """Represents a successful operation carrying value T."""
 
     value: T
@@ -46,7 +46,7 @@ class Ok[T]:
 
 
 @dataclass(frozen=True, slots=True)
-class Err[E]:
+class Err(Generic[E]):
     """Represents an error or rejected operation carrying error E."""
 
     error: E
@@ -68,9 +68,9 @@ class Err[E]:
         return self.error
 
 
-type Result[T, E] = Ok[T] | Err[E]
+Result: TypeAlias = Ok[T] | Err[E]
 
 
-def is_ok[T, E](result: Result[T, E]) -> bool:
+def is_ok(result: Result[T, E]) -> bool:
     """Return True if result is an Ok instance, False otherwise."""
     return isinstance(result, Ok)

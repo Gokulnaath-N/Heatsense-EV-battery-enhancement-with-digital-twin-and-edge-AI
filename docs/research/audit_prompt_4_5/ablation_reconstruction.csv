@@ -1,0 +1,9 @@
+ablation_subsystem,model_name,feature_count,cross_val_mae_pct,cross_val_rmse_pct,cross_val_r2,delta_r2_vs_raw_sensor,monotonic_improvement
+0_Raw_Sensor_Alone,xgboost,16,0.8074,1.3137,0.0591,0.0,True
+1_Sensor_plus_ECM,xgboost,19,0.5887,1.0724,0.3731,0.3139,True
+2_Sensor_plus_Polarization,xgboost,21,0.4913,0.9625,0.495,0.4359,True
+3_Sensor_plus_Resistance,xgboost,18,0.7918,1.2892,0.094,0.0348,True
+4_Sensor_plus_EKF_Innovation,xgboost,20,0.5588,1.0018,0.4529,0.3938,True
+5_Sensor_plus_CUSUM_Drift,xgboost,19,0.5701,1.0042,0.4503,0.3912,True
+6_Sensor_plus_Observability,xgboost,19,0.6692,1.1723,0.2508,0.1916,True
+7_Full_Physics_Augmented,xgboost,37,0.4672,0.9513,0.5067,0.4475,True

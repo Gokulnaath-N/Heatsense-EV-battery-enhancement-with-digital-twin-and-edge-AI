@@ -1,0 +1,22 @@
+rank,feature_name,feature_index,importance_delta_mae_pct,evaluation_cohort,max_collinearity_with_top_features,physical_subsystem
+1,v2_max,6,0.080210,Full Primary Cohort (N=124),0.000000,2RC Polarization
+2,mean_d_ocv_d_soc,17,0.048980,Full Primary Cohort (N=124),0.211649,OCV Observability
+3,ecm_v_max_err,2,0.046967,Full Primary Cohort (N=124),0.855455,Thermal Observer
+4,ekf_nis_max,13,0.040518,Full Primary Cohort (N=124),0.883356,EKF Innovation / NIS
+5,ekf_innovation_mean,10,0.038894,Full Primary Cohort (N=124),0.844266,EKF Innovation / NIS
+6,cusum_neg_max,15,0.034108,Full Primary Cohort (N=124),0.905821,CUSUM Drift
+7,cusum_drift_rate,16,0.022997,Full Primary Cohort (N=124),0.920983,CUSUM Drift
+8,v2_mean,5,0.018115,Full Primary Cohort (N=124),0.514564,2RC Polarization
+9,v_overpotential_mean,7,0.008881,Full Primary Cohort (N=124),nan,2RC Polarization
+10,ekf_nis_mean,12,0.006080,Full Primary Cohort (N=124),nan,EKF Innovation / NIS
+11,v1_max,4,0.002628,Full Primary Cohort (N=124),nan,2RC Polarization
+12,cusum_pos_max,14,0.000998,Full Primary Cohort (N=124),nan,CUSUM Drift
+13,ecm_v_mae,1,0.000582,Full Primary Cohort (N=124),nan,Thermal Observer
+14,v1_mean,3,0.000446,Full Primary Cohort (N=124),nan,2RC Polarization
+15,min_d_ocv_d_soc,18,0.000254,Full Primary Cohort (N=124),nan,OCV Observability
+16,plateau_fraction_pct,19,0.000117,Full Primary Cohort (N=124),nan,OCV Observability
+17,r0_step_ohm,8,0.000000,Full Primary Cohort (N=124),nan,Ohmic Step Resistance
+18,r0_deviation_pct,9,0.000000,Full Primary Cohort (N=124),nan,Ohmic Step Resistance
+19,ekf_innovation_std,11,-0.000200,Full Primary Cohort (N=124),nan,EKF Innovation / NIS
+20,ecm_v_rmse,0,-0.000967,Full Primary Cohort (N=124),nan,Thermal Observer
+21,thermal_heat_gen_est_j,20,-0.009568,Full Primary Cohort (N=124),nan,Thermal Observer

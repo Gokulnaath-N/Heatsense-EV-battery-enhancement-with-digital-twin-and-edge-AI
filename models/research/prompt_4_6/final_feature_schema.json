@@ -1,0 +1,25 @@
+{
+  "required_features": [
+    "ecm_v_rmse",
+    "ecm_v_mae",
+    "ecm_v_max_err",
+    "v1_mean",
+    "v1_max",
+    "v2_mean",
+    "v2_max",
+    "v_overpotential_mean",
+    "r0_step_ohm",
+    "r0_deviation_pct",
+    "ekf_innovation_mean",
+    "ekf_innovation_std",
+    "ekf_nis_mean",
+    "ekf_nis_max",
+    "cusum_pos_max",
+    "cusum_neg_max",
+    "cusum_drift_rate",
+    "mean_d_ocv_d_soc",
+    "min_d_ocv_d_soc",
+    "plateau_fraction_pct",
+    "thermal_heat_gen_est_j"
+  ]
+}

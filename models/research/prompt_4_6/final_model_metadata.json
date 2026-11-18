@@ -1,0 +1,42 @@
+{
+  "model_version": "1.0.0-prompt4.6",
+  "model_name": "HeatSense_Physics_Informed_SoH_Estimator",
+  "algorithm": "ridge",
+  "feature_architecture": "Model_B_Dynamic_Only",
+  "n_features": 21,
+  "features": [
+    "ecm_v_rmse",
+    "ecm_v_mae",
+    "ecm_v_max_err",
+    "v1_mean",
+    "v1_max",
+    "v2_mean",
+    "v2_max",
+    "v_overpotential_mean",
+    "r0_step_ohm",
+    "r0_deviation_pct",
+    "ekf_innovation_mean",
+    "ekf_innovation_std",
+    "ekf_nis_mean",
+    "ekf_nis_max",
+    "cusum_pos_max",
+    "cusum_neg_max",
+    "cusum_drift_rate",
+    "mean_d_ocv_d_soc",
+    "min_d_ocv_d_soc",
+    "plateau_fraction_pct",
+    "thermal_heat_gen_est_j"
+  ],
+  "primary_training_samples": 124,
+  "extended_validation_samples": 16,
+  "hyperparameters": {
+    "alpha": 10.0
+  },
+  "performance_metrics": {
+    "nested_cv_mae": 0.4518,
+    "nested_cv_rmse": 0.8816,
+    "nested_cv_r2": 0.5763,
+    "nested_cv_max_error": 7.5878
+  },
+  "file_hash_sha256": "f2811a4ad29344b40889d4c8e564d45928c05bccf57ec92adf425540742ad408"
+}

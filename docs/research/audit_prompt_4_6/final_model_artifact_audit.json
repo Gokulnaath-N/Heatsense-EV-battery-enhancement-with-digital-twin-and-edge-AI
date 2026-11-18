@@ -1,0 +1,33 @@
+{
+  "artifact_audit_timestamp": "2026-11-15T12:00:00Z",
+  "model_file_exists": true,
+  "model_file_path": "models\\research\\prompt_4_6\\heatsense_soh_estimator.joblib",
+  "model_file_size_bytes": 2121,
+  "model_sha256_match": true,
+  "actual_sha256": "f2811a4ad29344b40889d4c8e564d45928c05bccf57ec92adf425540742ad408",
+  "metadata_sha256": "f2811a4ad29344b40889d4c8e564d45928c05bccf57ec92adf425540742ad408",
+  "pipeline_steps": [
+    "imputer",
+    "scaler",
+    "regressor"
+  ],
+  "imputer_step_present": true,
+  "scaler_step_present": true,
+  "regressor_algorithm": "ridge",
+  "hyperparameters": {
+    "alpha": 10.0
+  },
+  "feature_count_schema": 21,
+  "feature_count_meta": 21,
+  "training_sample_count": 124,
+  "extended_sample_count": 16,
+  "prediction_reproducibility_verified": true,
+  "model_card_checks": {
+    "advisory_boundary_explicit": true,
+    "firmware_protection_exclusive": true,
+    "lfp_chemistry_bounds_explicit": true,
+    "single_cell_scope_explicit": true,
+    "current_sign_convention_explicit": true
+  },
+  "audit_status": "ALL_CHECKS_PASSED"
+}
